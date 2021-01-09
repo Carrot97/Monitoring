@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cxy.monitor.mapper.PredictMapper">
+    <!--  自定义映射规则  -->
+    <resultMap id="myStatistics" type="com.cxy.monitor.bean.Statistics">
+        <result property="keyword" column="keyword"/>
+        <result property="number" column="num"/>
+    </resultMap>
+
+    <!--List<Statistics> selectMax5QuantityByTime(Date startTime, String[] entries);-->
+    <select id="selectMax5QuantityByTime" resultMap="myStatistics">
+        SELECT keyword, count(*) num
+        FROM `entry`
+        WHERE id in (SELECT max(id) FROM `entry` where time > #{startTime} GROUP BY title) and
+        keyword in
+            <foreach collection="entries" item="entry" open="(" close=")" separator=",">
+                #{entry}
+            </foreach>
+        GROUP BY keyword
+    </select>
+
+</mapper>

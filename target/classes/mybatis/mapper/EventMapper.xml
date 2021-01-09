@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxy.monitor.mapper.EventMapper" >
+  <resultMap id="BaseResultMap" type="com.cxy.monitor.bean.Event" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="dianzan" property="dianzan" jdbcType="INTEGER" />
+    <result column="zhuanfa" property="zhuanfa" jdbcType="INTEGER" />
+    <result column="pinglun" property="pinglun" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, keyword, title, time, url, dianzan, zhuanfa, pinglun
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from entry
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!--List<Event> selectByParams(SearchParams params);-->
+  <select id="selectByParams" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from entry
+    where time > #{startTime}
+    <if test="keyword != null and keyword != 'null'">
+        and keyword=#{keyword}
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from entry
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cxy.monitor.bean.Event" >
+    insert into entry (id, keyword, title, 
+      time, url, dianzan, 
+      zhuanfa, pinglun)
+    values (#{id,jdbcType=INTEGER}, #{keyword,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{time,jdbcType=TIMESTAMP}, #{url,jdbcType=VARCHAR}, #{dianzan,jdbcType=INTEGER}, 
+      #{zhuanfa,jdbcType=INTEGER}, #{pinglun,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cxy.monitor.bean.Event" >
+    insert into entry
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="keyword != null" >
+        keyword,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="dianzan != null" >
+        dianzan,
+      </if>
+      <if test="zhuanfa != null" >
+        zhuanfa,
+      </if>
+      <if test="pinglun != null" >
+        pinglun,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="dianzan != null" >
+        #{dianzan,jdbcType=INTEGER},
+      </if>
+      <if test="zhuanfa != null" >
+        #{zhuanfa,jdbcType=INTEGER},
+      </if>
+      <if test="pinglun != null" >
+        #{pinglun,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cxy.monitor.bean.Event" >
+    update entry
+    <set >
+      <if test="keyword != null" >
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="dianzan != null" >
+        dianzan = #{dianzan,jdbcType=INTEGER},
+      </if>
+      <if test="zhuanfa != null" >
+        zhuanfa = #{zhuanfa,jdbcType=INTEGER},
+      </if>
+      <if test="pinglun != null" >
+        pinglun = #{pinglun,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cxy.monitor.bean.Event" >
+    update entry
+    set keyword = #{keyword,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      url = #{url,jdbcType=VARCHAR},
+      dianzan = #{dianzan,jdbcType=INTEGER},
+      zhuanfa = #{zhuanfa,jdbcType=INTEGER},
+      pinglun = #{pinglun,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

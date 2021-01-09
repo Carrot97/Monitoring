@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cxy.monitor.mapper.AlertMapper">
+    <!--  自定义映射规则  -->
+    <resultMap id="myAlert" type="com.cxy.monitor.bean.Alert">
+        <id property="id" column="id"/>
+        <result property="time" column="time"/>
+        <result property="keyword" column="keyword"/>
+        <result property="reason" column="reason" javaType="com.cxy.monitor.bean.Reason"/>
+        <result property="level" column="level" javaType="com.cxy.monitor.bean.Level"/>
+    </resultMap>
+    <resultMap id="myStatistics" type="com.cxy.monitor.bean.Statistics">
+        <result property="keyword" column="keyword"/>
+        <result property="number" column="count(*)"/>
+    </resultMap>
+
+    <!--List<Alert> selectByTime(Date startTime);-->
+    <select id="selectByTime" resultMap="myAlert">
+        select * from alert
+        where time > #{startTime}
+    </select>
+
+    <!--List<String> selectQuantityByTime(Date startTime);-->
+    <select id="selectQuantityByTime" resultMap="myStatistics">
+        SELECT keyword, count(*)
+        FROM `entry`
+        WHERE id in (SELECT max(id) FROM `entry` where time > #{startTime} GROUP BY title)
+        GROUP BY keyword
+    </select>
+
+    <!--void insertAlerts(ArrayList<Alert> alerts);-->
+    <insert id="insertAlerts" parameterType="java.util.List">
+        insert into alert
+        (time, keyword, reason, level)
+        values
+        <foreach collection="list" item="alertItem" index="idx" separator=",">
+            (#{alertItem.time},
+             #{alertItem.keyword},
+             #{alertItem.reason},
+             #{alertItem.level})
+        </foreach>
+    </insert>
+
+</mapper>
